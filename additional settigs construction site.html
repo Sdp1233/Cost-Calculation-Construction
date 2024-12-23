@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Materials Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .result {
+            background-color: #d9edf7;
+            color: #31708f;
+            padding: 15px;
+            border: 1px solid #bce8f1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Construction Materials Calculator</h1>
+        <label for="workType">Select Type of Work:</label>
+        <select id="workType">
+            <option value="concrete">Concrete</option>
+            <option value="plastering">Plastering</option>
+            <option value="brickwork">Brickwork</option>
+            <option value="tarring">Road Tarring</option>
+            <option value="carpeting">Road Carpeting</option>
+        </select>
+
+        <div id="inputFields">
+            <!-- Dynamic input fields will be added here -->
+        </div>
+
+        <button id="calculate">Calculate</button>
+
+        <div id="output" class="result" style="display: none;">
+            <!-- Calculation results will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        const inputFields = document.getElementById('inputFields');
+        const output = document.getElementById('output');
+
+        document.getElementById('workType').addEventListener('change', function () {
+            const workType = this.value;
+            inputFields.innerHTML = '';
+
+            if (workType === 'concrete') {
+                inputFields.innerHTML = 
+                    `<label for="length">Length (meters):</label>
+                    <input type="number" id="length" placeholder="Enter length">
+
+                    <label for="width">Width (meters):</label>
+                    <input type="number" id="width" placeholder="Enter width">
+
+                    <label for="thickness">Thickness (meters):</label>
+                    <input type="number" id="thickness" placeholder="Enter thickness">
+
+                    <label for="mixRatio">Mix Ratio (e.g., 1:2:4):</label>
+                    <input type="text" id="mixRatio" placeholder="Enter mix ratio">`;
+            } else if (workType === 'plastering') {
+                inputFields.innerHTML = 
+                    `<label for="area">Area (square meters):</label>
+                    <input type="number" id="area" placeholder="Enter area">
+
+                    <label for="thickness">Thickness (meters):</label>
+                    <input type="number" id="thickness" placeholder="Enter thickness">`;
+            } else if (workType === 'brickwork') {
+                inputFields.innerHTML = 
+                    `<label for="wallLength">Wall Length (meters):</label>
+                    <input type="number" id="wallLength" placeholder="Enter wall length">
+
+                    <label for="wallHeight">Wall Height (meters):</label>
+                    <input type="number" id="wallHeight" placeholder="Enter wall height">
+
+                    <label for="wallThickness">Wall Thickness (meters):</label>
+                    <input type="number" id="wallThickness" placeholder="Enter wall thickness">`;
+            } else if (workType === 'tarring') {
+                inputFields.innerHTML = 
+                    `<label for="roadLength">Road Length (meters):</label>
+                    <input type="number" id="roadLength" placeholder="Enter road length">
+
+                    <label for="roadWidth">Road Width (meters):</label>
+                    <input type="number" id="roadWidth" placeholder="Enter road width">
+
+                    <label for="thickness">Layer Thickness (meters):</label>
+                    <input type="number" id="thickness" placeholder="Enter thickness">`;
+            } else if (workType === 'carpeting') {
+                inputFields.innerHTML = 
+                    `<label for="roadLength">Road Length (meters):</label>
+                    <input type="number" id="roadLength" placeholder="Enter road length">
+
+                    <label for="roadWidth">Road Width (meters):</label>
+                    <input type="number" id="roadWidth" placeholder="Enter road width">
+
+                    <label for="thickness">Layer Thickness (meters):</label>
+                    <input type="number" id="thickness" placeholder="Enter thickness">`;
+            }
+        });
+
+        document.getElementById('calculate').addEventListener('click', function () {
+            const workType = document.getElementById('workType').value;
+            let result = '';
+
+            if (workType === 'concrete') {
+                const length = parseFloat(document.getElementById('length').value);
+                const width = parseFloat(document.getElementById('width').value);
+                const thickness = parseFloat(document.getElementById('thickness').value);
+                const mixRatio = document.getElementById('mixRatio').value.split(':').map(Number);
+
+                const volume = length * width * thickness;
+                const totalParts = mixRatio.reduce((a, b) => a + b, 0);
+
+                const cement = (mixRatio[0] / totalParts) * volume;
+                const sand = (mixRatio[1] / totalParts) * volume;
+                const aggregate = (mixRatio[2] / totalParts) * volume;
+
+                result = 
+                    `Total Volume: ${volume.toFixed(2)} cubic meters<br>
+                    Cement: ${cement.toFixed(2)} cubic meters<br>
+                    Sand: ${sand.toFixed(2)} cubic meters<br>
+                    Aggregate: ${aggregate.toFixed(2)} cubic meters`;
+            } else if (workType === 'plastering') {
+                const area = parseFloat(document.getElementById('area').value);
+                const thickness = parseFloat(document.getElementById('thickness').value);
+
+                const volume = area * thickness;
+                const cement = 0.25 * volume;
+                const sand = 0.75 * volume;
+
+                result = 
+                    `Total Volume: ${volume.toFixed(2)} cubic meters<br>
+                    Cement: ${cement.toFixed(2)} cubic meters<br>
+                    Sand: ${sand.toFixed(2)} cubic meters`;
+            } else if (workType === 'brickwork') {
+                const wallLength = parseFloat(document.getElementById('wallLength').value);
+                const wallHeight = parseFloat(document.getElementById('wallHeight').value);
+                const wallThickness = parseFloat(document.getElementById('wallThickness').value);
+
+                const brickVolume = 0.19 * 0.09 * 0.09;
+                const wallVolume = wallLength * wallHeight * wallThickness;
+                const mortarRatio = 0.25;
+
+                const bricks = wallVolume * (1 - mortarRatio) / brickVolume;
+                const mortar = wallVolume * mortarRatio;
+
+                result = 
+                    `Total Volume: ${wallVolume.toFixed(2)} cubic meters<br>
+                    Bricks: ${Math.ceil(bricks)}<br>
+                    Mortar: ${mortar.toFixed(2)} cubic meters`;
+            } else if (workType === 'tarring') {
+                const roadLength = parseFloat(document.getElementById('roadLength').value);
+                const roadWidth = parseFloat(document.getElementById('roadWidth').value);
+                const thickness = parseFloat(document.getElementById('thickness').value);
+
+                const area = roadLength * roadWidth;
+                const asphaltRequired = area * thickness; // Assuming 1 cubic meter of asphalt required for 1 m^3 of tarring
+
+                result = 
+                    `Total Area: ${area.toFixed(2)} square meters<br>
+                    Asphalt Required: ${asphaltRequired.toFixed(2)} cubic meters`;
+            } else if (workType === 'carpeting') {
+                const roadLength = parseFloat(document.getElementById('roadLength').value);
+                const roadWidth = parseFloat(document.getElementById('roadWidth').value);
+                const thickness = parseFloat(document.getElementById('thickness').value);
+
+                const area = roadLength * roadWidth;
+                const carpetArea = area * thickness; // Assume thickness gives the volume of carpet material
+
+                const carpetWeight = carpetArea * 1.2; // Assuming 1.2 tons per cubic meter for the carpet material
+
+                result = 
+                    `Total Area: ${area.toFixed(2)} square meters<br>
+                    Carpet Weight Required: ${carpetWeight.toFixed(2)} tons`;
+            }
+
+            output.innerHTML = result;
+            output.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
